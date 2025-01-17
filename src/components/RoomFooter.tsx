@@ -1,17 +1,19 @@
 import { HiOutlineCurrencyDollar } from "react-icons/hi2";
 import { formatCurrency } from "../utils/Vars";
+import { useSelector } from "react-redux";
+import { RootState } from "../store";
 
 const RoomFooter = ({
   extrasPrice,
   hasBreakfast,
-  isPaid,
   regularPrice
 }: {
-  isPaid: boolean;
   regularPrice: number;
   hasBreakfast: Boolean;
   extrasPrice: number;
 }) => {
+  const { isPaid } = useSelector((state: RootState) => state.rooms);
+
   return (
     <div className="w-full flex bg-primaryBlue  items-center justify-between   text-white p-3 sm:p-5 rounded-lg">
       <div className="flex items-center gap-x-2 text-sm sm:text-base">

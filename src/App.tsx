@@ -3,7 +3,6 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import ProtectedRoute from "./components/ProtectedRoute";
-import BookRoom from "./features/Reservations/BookRoom";
 import RoomDetails from "./features/Rooms/RoomDetails";
 import MainLayout from "./layouts/MainLayout";
 import Dashboard from "./pages/Dashboard";
@@ -36,7 +35,6 @@ function App() {
               <Route index element={<Navigate replace to={"dashboard"} />} />
               <Route path="dashboard" element={<Dashboard />} />
               <Route path="reservations" element={<Reservations />} />
-              <Route path="bookRoom" element={<BookRoom />} />
               <Route path=":roomId" element={<RoomDetails />} />
             </Route>
             <Route path="login" element={<Login />} />,

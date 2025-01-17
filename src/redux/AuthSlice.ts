@@ -44,6 +44,7 @@ export const login = createAsyncThunk<
     if (data.user?.email) {
       const userName = handleUserName(data.user.email);
       sessionStorage.setItem("userName", userName);
+      sessionStorage.setItem("guestId", data.session.user.id);
     }
   }
 

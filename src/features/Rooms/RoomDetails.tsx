@@ -1,17 +1,26 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import Button from "../../components/Button";
 import Loading from "../../components/Loading";
+import Modal from "../../components/Modal";
 import { useMoveBack } from "../../hooks/UseMoveback";
+import { CheckInModal } from "../../redux/RoomsSlice";
+import { AppDispatch, RootState } from "../../store";
+import BookRoom from "../Reservations/BookRoom";
 import RoomBoxData from "./RoomBoxData";
 import { UseRoom } from "./UseRoom";
-import Button from "../../components/Button";
 
 function RoomDetails() {
   const { roomId } = useParams<{ roomId: string }>();
-  const navigate = useNavigate();
   const moveBack = useMoveBack();
+  const { isCheckInModal } = useSelector((state: RootState) => state.rooms);
+  const dispatch = useDispatch<AppDispatch>();
+
+  function handleClose() {
+    dispatch(CheckInModal("close"));
+  }
 
   const { room, isLoading, error } = UseRoom();
-  console.log(room);
   if (!room) return null;
   if (isLoading) return <Loading />;
   if (error) return <div>Error loading room details: {error.message}</div>;
@@ -52,9 +61,19 @@ function RoomDetails() {
           Back
         </Button>
         {status === "unconfirmed" && (
-          <Button intent={"checkIn"} onClick={() => navigate(`/bookRoom`)}>
-            Check in
-          </Button>
+          <>
+            <Button
+              intent={"checkIn"}
+              onClick={() => dispatch(CheckInModal("open"))}
+            >
+              Check in
+            </Button>
+            {isCheckInModal && (
+              <Modal>
+                <BookRoom handleClose={handleClose} />
+              </Modal>
+            )}
+          </>
         )}
       </div>
     </div>
