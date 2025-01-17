@@ -1,12 +1,82 @@
-export interface IRooms {
-  id: number;
-  count: number;
+export interface Guest {
+  countryFlag: string;
   created_at: string;
-  type: string;
-  status: "booked" | "available";
-  regularPrice: number;
-  name: string;
+  email: string;
+  fullName: string;
+  id: number;
+  nationalID: string;
+  nationality: string;
+}
+
+export interface Room {
+  created_at: string;
   description: string;
-  maxCapacity: number;
+  discount: number;
+  id: number;
   image: string;
+  maxCapacity: number;
+  name: string;
+  regularPrice: number;
+  status: string;
+  type: string;
+}
+
+export interface IRooms {
+  maxCapacity: number;
+  cabinId: number;
+  created_at: string;
+  endDate: string;
+  extrasPrice: number;
+  guestId: number;
+  guests: Guest;
+  hasBreakfast: boolean;
+  id: number;
+  isBreakfast: boolean;
+  isPaid: boolean;
+  numGuests: number;
+  numNights: number;
+  observations: string;
+  regularPrice: number;
+  rooms: Room;
+  startDate: string;
+  status: string;
+  totalPrice: number;
+  type: string;
+}
+
+export interface IBooking {
+  cabinId: number;
+  created_at: string;
+  endDate: string;
+  extrasPrice: number;
+  guestId: number;
+  guests: Guest;
+  hasBreakfast: boolean;
+  id: number;
+  isBreakfase: boolean;
+  isPaid: boolean;
+  maxCapacity: number;
+  numGuests: number;
+  numNights: number;
+  observations: string;
+  regularPrice: number;
+  rooms: Room;
+  startDate: string;
+  status: string;
+  totalPrice: number;
+  type: string;
+}
+export interface IOption {
+  label: string;
+  value: string;
+}
+export interface ISortBy {
+  field: string;
+  direction: string;
+}
+
+export interface IGetRoomsProps {
+  page?: number;
+  filter: { filterBy: string; value: string } | null;
+  sortBy: ISortBy;
 }

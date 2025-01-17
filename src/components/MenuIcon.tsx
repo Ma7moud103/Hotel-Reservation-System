@@ -8,7 +8,7 @@ interface IProps {
 }
 const MenuIcon = ({ setToggleMenu, toggleMenu }: IProps) => {
   return (
-    <span className="justify-end cursor-pointer sm:hidden">
+    <span className="justify-end cursor-pointer md:hidden">
       {!toggleMenu ? (
         <IoMenu
           className="transition-all hover:shadow-lg"

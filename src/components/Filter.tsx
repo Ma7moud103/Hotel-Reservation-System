@@ -1,30 +1,32 @@
-const Filter = () => {
+import { useSearchParams } from "react-router-dom";
+import { IOption } from "../interface/IRoom";
+import Button from "./Button";
+
+interface IProps {
+  options: IOption[];
+  filterBy: string;
+}
+const Filter = ({ options, filterBy }: IProps) => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const currentFilter = searchParams.get(filterBy) || options.at(0)?.value;
+
+  function handleClick(value: string) {
+    searchParams.set(filterBy, value);
+    if (searchParams.get("page")) searchParams.set("page", "1");
+    setSearchParams(searchParams);
+  }
   return (
-    <div className="flex items-center justify-between gap-x-2">
-      <h1 className="text-lg italic font-semibold text-bodyText text-[1.3rem]">
-        Our Rooms
-      </h1>
-      <select
-        className="p-2 rounded-md bg-primaryBlue text-lightGray"
-        value={""}
-        id=""
-      >
-        <option className="text-lightGray" value="">
-          Search By Price
-        </option>
-        <option className="text-lightGray" value="">
-          from 0 to 50
-        </option>
-        <option className="text-lightGray" value="">
-          from 50 to 100
-        </option>
-        <option className="text-lightGray" value="">
-          from 100 to 200
-        </option>
-        <option className="text-lightGray" value="">
-          up 200
-        </option>
-      </select>
+    <div className="border border-borderLightGray rounded-md bg-accentGold w-full sm:w-auto shadow-sm p-1 flex gap-1">
+      {options.map((option) => (
+        <Button
+          intent={"filter"}
+          key={option.value}
+          onClick={() => handleClick(option.value)}
+          disabled={option.value === currentFilter}
+        >
+          {option.label}
+        </Button>
+      ))}
     </div>
   );
 };

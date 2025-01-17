@@ -11,6 +11,7 @@ function Pagination({ count }: PaginationProps) {
   const currentPage = !searchParams.get("page")
     ? 1
     : Number(searchParams.get("page"));
+
   const pageCount = Math.ceil(count / PAGE_SIZE);
 
   function nextPage() {
@@ -28,29 +29,32 @@ function Pagination({ count }: PaginationProps) {
   if (pageCount <= 1) return null;
 
   return (
-    <div className="flex items-center justify-between w-full">
-      <p className="ml-2 text-xl">
+    <div className="flex items-center justify-between w-full flex-col my-2 gap-y-2  py-3 sm:flex-row">
+      <p className="md:ms-2 md:text-xl text-[1.2rem] text-primaryBlue font-bold">
         Showing{" "}
         <span className="font-semibold">
           {(currentPage - 1) * PAGE_SIZE + 1}
         </span>{" "}
-        to <span className="font-semibold">{currentPage * PAGE_SIZE}</span> from{" "}
-        <span className="font-semibold">{count}</span> results
+        to{" "}
+        <span className="font-semibold">
+          {currentPage === pageCount ? count : currentPage * PAGE_SIZE}
+        </span>{" "}
+        from <span className="font-semibold">{count}</span> results
       </p>
 
       <div className="flex gap-2">
         <button
           disabled={currentPage === 1}
           onClick={prevPage}
-          className="flex items-center justify-center gap-2 px-4 py-2 text-lg font-medium text-gray-800 transition-all rounded-lg bg-gray-50 hover:bg-brand-600 hover:text-white disabled:bg-gray-200"
+          className="flex items-center justify-center gap-2 text-[1.1rem] px-2 pe-3 md:px-4 md:py-2 md:text-lg font-medium transition-all rounded-lg bg-secondaryBtnBg hover:bg-secondaryBtnHover text-mainBg disabled:bg-mutedText disabled:text-mainBg"
         >
-          <HiChevronLeft className="w-6 h-6" />
+          <HiChevronLeft className="md:w-6 md:h-6" />
           <span>Previous</span>
         </button>
         <button
           disabled={currentPage === pageCount}
           onClick={nextPage}
-          className="flex items-center justify-center gap-2 px-4 py-2 text-lg font-medium text-gray-800 transition-all rounded-lg bg-gray-50 hover:bg-brand-600 hover:text-white disabled:bg-gray-200"
+          className="flex items-center justify-center gap-2 text-[1.1rem] px-2 pe-3 md:px-4 md:py-2 md:text-lg font-medium transition-all rounded-lg bg-secondaryBtnBg hover:bg-secondaryBtnHover text-mainBg disabled:bg-mutedText disabled:text-mainBg"
         >
           <HiChevronRight className="w-6 h-6" />
           <span>Next</span>
