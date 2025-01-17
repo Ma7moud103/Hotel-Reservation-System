@@ -11,7 +11,7 @@ const Input = ({ name, type, label }: InputProps) => (
       {label}
     </label>
     <Field
-      className="py-2 bg-white w-full rounded-xl px-3 outline-accentGold"
+      className="py-2 shadow-sm bg-white w-full rounded-xl px-3 outline-accentGold"
       name={name}
       type={type}
       id={name}

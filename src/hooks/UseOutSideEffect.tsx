@@ -5,7 +5,7 @@ function UseOutSideEffect(
   handler: () => void,
   listenCapturing: boolean = true
 ) {
-  const ref = useRef<HTMLElement | null>(null);
+  const ref = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     function handleClick(e: MouseEvent) {

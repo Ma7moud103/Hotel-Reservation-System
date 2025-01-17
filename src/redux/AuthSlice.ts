@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import supabase from "../services/supabsase";
 import { ISignUpValues, IUser } from "../interface/Iuser";
 import { Session, User } from "@supabase/supabase-js";
-import { handleUserName, token } from "../utils/Vars";
+import { guestId, handleUserName, token } from "../utils/Vars";
 
 interface AuthState {
   user: User | null;
@@ -46,6 +46,34 @@ export const login = createAsyncThunk<
       sessionStorage.setItem("userName", userName);
       sessionStorage.setItem("guestId", data.session.user.id);
     }
+
+    const { error: guestError } = await supabase
+      .from("guests")
+      .upsert({
+        guestId: String(data.session.user.id),
+        email: data.user?.email,
+        fullName: handleUserName(data.session.user.email) ?? ""
+      })
+      .single();
+
+    if (guestError) {
+      toast.error("Error adding user to guests table");
+      console.log(guestError);
+      throw new Error(guestError.message);
+    }
+  }
+
+  if (data?.user && !data.user.email_confirmed_at) {
+    const { error: verificationError } = await supabase.auth.updateUser({
+      email: data.user.email
+    });
+
+    if (verificationError) {
+      console.log(verificationError);
+      throw new Error(verificationError.message);
+    }
+
+    toast.info("A verification email has been sent. Please check your inbox.");
   }
 
   return { user: data.user, session: data.session };
@@ -61,7 +89,11 @@ export const signup = createAsyncThunk<
     const { data, error } = await supabase.auth.signUp({
       phone,
       email,
-      password
+      password,
+      options: {
+        emailRedirectTo: null,
+        shouldSendEmail: false
+      }
     });
 
     if (error) {

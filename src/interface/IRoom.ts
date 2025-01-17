@@ -80,3 +80,19 @@ export interface IGetRoomsProps {
   filter: { filterBy: string; value: string } | null;
   sortBy: ISortBy;
 }
+
+export interface ICheckinData {
+  guestID: string;
+  numGuests: number;
+  observations: string | null;
+  extrasPrice: number;
+  totalPrice: number;
+  isPaid: boolean;
+  hasBreakfast: boolean;
+  status: "checked-in" | "checked-out" | "unconfirmed";
+  startDate: string | undefined;
+  endDate: string | undefined;
+  numNights: number;
+  regularPrice: number;
+  cabinId: number;
+}

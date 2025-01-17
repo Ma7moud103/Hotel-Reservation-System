@@ -1,4 +1,6 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { ICheckinData } from "../interface/IRoom";
+import supabase from "../services/supabsase";
 
 interface Range {
   from: string | undefined;
@@ -10,14 +12,32 @@ interface RoomsState {
   breakfast: boolean;
   isPaid: boolean;
   range: Range;
+  bookingStatus: "loading" | "success" | "failed";
+  errorMessage: string;
 }
 
 const initialState: RoomsState = {
   isCheckInModal: false,
   breakfast: false,
   isPaid: false,
-  range: { from: undefined, to: undefined }
+  range: { from: undefined, to: undefined },
+  bookingStatus: "loading",
+  errorMessage: ""
 };
+
+export const createBooking = createAsyncThunk(
+  "rooms/createBooking",
+  async (bookingData: ICheckinData, { rejectWithValue }) => {
+    const { error } = await supabase
+      .from("bookings")
+      .insert([bookingData])
+      .single();
+    if (error) {
+      console.log(error);
+      return rejectWithValue("Booking could not be created");
+    }
+  }
+);
 
 const roomSlice = createSlice({
   name: "rooms",
@@ -27,13 +47,34 @@ const roomSlice = createSlice({
       if (action.payload === "close") state.isCheckInModal = false;
       if (action.payload === "open") state.isCheckInModal = true;
     },
-    toggleBreakfast: (state, action: PayloadAction<"breakfast" | "isPaid">) => {
+    toggleBreakfast: (
+      state,
+      action: PayloadAction<"breakfast" | "isPaid" | "reset">
+    ) => {
       if (action.payload === "breakfast") state.breakfast = !state.breakfast;
       if (action.payload === "isPaid") state.isPaid = !state.isPaid;
+
+      if (action.payload === "reset") {
+        state.isPaid = false;
+        state.breakfast = false;
+      }
     },
     handleRange: (state, action: PayloadAction<Range>) => {
       state.range = action.payload;
     }
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(createBooking.pending, (state) => {
+        state.bookingStatus = "loading";
+      })
+      .addCase(createBooking.fulfilled, (state) => {
+        state.bookingStatus = "success";
+      })
+      .addCase(createBooking.rejected, (state, action) => {
+        state.bookingStatus = "failed";
+        state.errorMessage = action.payload as string;
+      });
   }
 });
 

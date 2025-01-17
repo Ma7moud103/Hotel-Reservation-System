@@ -5,7 +5,7 @@ interface OverlayProps {
 }
 function Overlay({ children }: OverlayProps) {
   return (
-    <div className="bg-overlay backdrop-blur-[2px] absolute top-0 start-0 end-0 bottom-0 z-10 h-screen w-screen flex items-center justify-center">
+    <div className="bg-overlay backdrop-blur-[2px] fixed z-10  top-0 start-0 end-0 bottom-0 z-10 h-screen w-screen flex items-center justify-center">
       {children}
     </div>
   );

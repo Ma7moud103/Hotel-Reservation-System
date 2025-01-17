@@ -80,21 +80,23 @@ function RoomBoxData({ room }: IProps) {
           </div>
         </section>
       </section>
-      <div className="mt-3">
-        <DayPicker
-          className="bg-accentGold flex flex-wrap gap-2 w-full place-self-center p-3  rounded-xl"
-          mode="range"
-          onSelect={(range) =>
-            dispatch(handleRange({ from: range?.from, to: range?.to }))
-          }
-          selected={range}
-          fromMonth={new Date()}
-          fromDate={new Date()}
-          toYear={new Date().getFullYear() + 5}
-          captionLayout="dropdown"
-          numberOfMonths={2}
-        />
-      </div>
+      {status === "unconfirmed" && (
+        <div className="mt-3">
+          <DayPicker
+            className="bg-accentGold flex flex-wrap gap-2 w-full place-self-center p-3  rounded-xl"
+            mode="range"
+            onSelect={(range) =>
+              dispatch(handleRange({ from: range?.from, to: range?.to }))
+            }
+            selected={range}
+            fromMonth={new Date()}
+            fromDate={new Date()}
+            toYear={new Date().getFullYear() + 5}
+            captionLayout="dropdown"
+            numberOfMonths={2}
+          />
+        </div>
+      )}
     </>
   );
 }

@@ -11,6 +11,7 @@ interface Route {
 }
 
 export const token = sessionStorage.getItem("token");
+export const guestId = sessionStorage.getItem("guestId");
 export function handleUserName(email: string): string {
   if (!email.includes("@")) {
     throw new Error("Invalid email address");
