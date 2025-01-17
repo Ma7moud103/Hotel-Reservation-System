@@ -1,16 +1,15 @@
 import { Form, Formik } from "formik";
-import { useDispatch, useSelector } from "react-redux";
-import * as Yup from "yup";
-import Input from "../components/Input";
-import { login } from "../redux/AuthSlice";
-import { AppDispatch, RootState } from "../store";
 import { BsEmojiHeartEyes } from "react-icons/bs";
-import Button from "../components/Button";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { passwordRegex } from "../utils/Vars";
+import * as Yup from "yup";
+import Button from "../components/Button";
+import Input from "../components/Input";
 import { IUser } from "../interface/Iuser";
 import AuthLayout from "../layouts/AuthLayout";
-import { useEffect } from "react";
+import { login } from "../redux/AuthSlice";
+import { AppDispatch, RootState } from "../store";
+import { passwordRegex } from "../utils/Vars";
 
 const Login = () => {
   const navigate = useNavigate();

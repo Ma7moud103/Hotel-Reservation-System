@@ -12,16 +12,12 @@ interface IProps {
 function RoomBoxData({ room }: IProps) {
   if (!room) return null;
   const {
-    rooms: { maxCapacity, name, description, image, type, regularPrice },
+    rooms: { maxCapacity, name, image, regularPrice },
     startDate,
     endDate,
-    isBreakfase,
     isPaid,
     extrasPrice,
-    hasBreakfast,
-    totalPrice,
-    numGuests,
-    numNights
+    hasBreakfast
   } = room;
 
   return (

@@ -1,8 +1,5 @@
-import { useSelector } from "react-redux";
-import { RootState } from "../../store";
-
 const BookRoom = () => {
-  const { session } = useSelector((state: RootState) => state.auth);
+  // const { session } = useSelector((state: RootState) => state.auth);
   return (
     <section className="h-full">
       Lorem ipsum dolor, sit amet consectetur adipisicing elit. Illum ab sunt
