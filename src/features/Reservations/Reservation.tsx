@@ -9,9 +9,10 @@ interface RoomProps {
 
 const Reservation = ({ room }: RoomProps) => {
   const {
-    rooms: { image, description, name, type, maxCapacity },
+    rooms: { image, description, name, maxCapacity },
     id,
     status,
+    type,
     regularPrice,
     numGuests
   } = room;

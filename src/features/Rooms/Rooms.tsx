@@ -10,6 +10,7 @@ const Rooms = () => {
   const { rooms, isLoading } = UseRooms();
 
   const data = rooms?.data;
+  console.log(data);
   const count = rooms?.count ?? 0;
 
   if (isLoading) return <Loading />;
