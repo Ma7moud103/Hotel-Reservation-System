@@ -90,8 +90,8 @@ export interface ICheckinData {
   isPaid: boolean;
   hasBreakfast: boolean;
   status: "checked-in" | "checked-out" | "unconfirmed";
-  startDate: string | undefined;
-  endDate: string | undefined;
+  startDate: Date | undefined;
+  endDate: Date | undefined;
   numNights: number;
   regularPrice: number;
   cabinId: number;

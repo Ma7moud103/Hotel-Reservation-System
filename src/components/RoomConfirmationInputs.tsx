@@ -8,13 +8,9 @@ interface IProps {
   numGuests: number;
   regularPrice: number;
 }
-const RoomConfirmationInputs = ({
-  numNights,
-  numGuests,
-  regularPrice
-}: IProps) => {
+const RoomConfirmationInputs = ({ numNights, numGuests }: IProps) => {
   const dispatch = useDispatch<AppDispatch>();
-  const { breakfast, isPaid } = useSelector((state: RootState) => state.rooms);
+  const { breakfast } = useSelector((state: RootState) => state.rooms);
 
   const { settings } = UseSettings();
   const optionalBrackfastPrice =

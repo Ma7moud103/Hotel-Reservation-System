@@ -25,7 +25,7 @@ const BookRoom = ({ handleClose }: IProps) => {
   const ref: MutableRefObject<HTMLDivElement | null> =
     UseOutSideEffect(handleClose);
 
-  const { range, breakfast, isPaid, bookingStatus, errorMessage } = useSelector(
+  const { range, breakfast, isPaid } = useSelector(
     (state: RootState) => state.rooms
   );
 
@@ -47,7 +47,7 @@ const BookRoom = ({ handleClose }: IProps) => {
 
   const initialValues: ICheckinData = {
     extrasPrice: 0,
-    guestID: guestId,
+    guestID: String(guestId),
     hasBreakfast: breakfast,
     isPaid: isPaid,
     numGuests: numGuests,
@@ -56,18 +56,17 @@ const BookRoom = ({ handleClose }: IProps) => {
     totalPrice: cabinPrice,
     cabinId: id,
     regularPrice: regularPrice,
+    numNights: nights,
     endDate: endDate,
-    startDate: startDate,
-    numNights: nights
+    startDate: startDate
   };
 
   const handleSubmit = async (values: ICheckinData) => {
-    console.log(values);
     try {
-      await dispatch(createBooking(values)).unwrap(); // Wait for the async thunk to resolve
-      toast.success("Booking successfully created!"); // Success toast
+      await dispatch(createBooking(values)).unwrap();
+      toast.success("Booking successfully created!");
     } catch (error) {
-      toast.error(error as string); // Display the error message
+      toast.error(error as string);
     }
   };
   return (

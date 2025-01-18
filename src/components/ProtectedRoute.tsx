@@ -9,8 +9,11 @@ interface IProps {
 }
 
 const ProtectedRoute = ({ children }: IProps) => {
-  const session = useSelector((state: RootState) => state.auth.session);
-  if (token !== null || session) {
+  const isAuthorized = useSelector(
+    (state: RootState) => state.auth.isAuthorized
+  );
+
+  if (token !== null || isAuthorized) {
     return <>{children}</>;
   } else {
     return <Login />;

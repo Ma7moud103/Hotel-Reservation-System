@@ -86,7 +86,12 @@ function RoomBoxData({ room }: IProps) {
             className="bg-accentGold flex flex-wrap gap-2 w-full place-self-center p-3  rounded-xl"
             mode="range"
             onSelect={(range) =>
-              dispatch(handleRange({ from: range?.from, to: range?.to }))
+              dispatch(
+                handleRange({
+                  from: range?.from,
+                  to: range?.to
+                })
+              )
             }
             selected={range}
             fromMonth={new Date()}

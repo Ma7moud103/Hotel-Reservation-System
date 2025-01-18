@@ -7,7 +7,7 @@ interface RoomProps {
   room: IRooms;
 }
 
-const Room = ({ room }: RoomProps) => {
+const Reservation = ({ room }: RoomProps) => {
   const {
     rooms: { image, description, name, type, maxCapacity },
     id,
@@ -31,7 +31,7 @@ const Room = ({ room }: RoomProps) => {
 
   return (
     <Link
-      to={`/rooms/${id}`}
+      to={`/reservations/${id}`}
       key={id}
       className="transition-all cursor-pointer hover:scale-[1.01] group bg-cardBg hover:bg-accentGold hover:shadow-xl rounded-xl shadow-md"
     >
@@ -83,4 +83,4 @@ const Room = ({ room }: RoomProps) => {
   );
 };
 
-export default Room;
+export default Reservation;

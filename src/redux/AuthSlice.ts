@@ -1,9 +1,9 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { toast } from "react-toastify";
-import supabase from "../services/supabsase";
-import { ISignUpValues, IUser } from "../interface/Iuser";
 import { Session, User } from "@supabase/supabase-js";
-import { guestId, handleUserName, token } from "../utils/Vars";
+import { toast } from "react-toastify";
+import { ISignUpValues, IUser } from "../interface/Iuser";
+import supabase from "../services/supabsase";
+import { handleUserName, token } from "../utils/Vars";
 
 interface AuthState {
   user: User | null;
@@ -50,9 +50,10 @@ export const login = createAsyncThunk<
     const { error: guestError } = await supabase
       .from("guests")
       .upsert({
+        id: Number(new Date().getMilliseconds()),
         guestId: String(data.session.user.id),
         email: data.user?.email,
-        fullName: handleUserName(data.session.user.email) ?? ""
+        fullName: handleUserName(String(data.session.user.email))
       })
       .single();
 
@@ -89,11 +90,7 @@ export const signup = createAsyncThunk<
     const { data, error } = await supabase.auth.signUp({
       phone,
       email,
-      password,
-      options: {
-        emailRedirectTo: null,
-        shouldSendEmail: false
-      }
+      password
     });
 
     if (error) {
@@ -118,7 +115,7 @@ const authSlice = createSlice({
       state.session = null;
       state.error = null;
       state.isAuthorized = false;
-      sessionStorage.removeItem("token");
+      sessionStorage.clear();
     }
   },
   extraReducers: (builder) => {

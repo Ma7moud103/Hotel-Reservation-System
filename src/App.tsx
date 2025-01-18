@@ -3,6 +3,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import ProtectedRoute from "./components/ProtectedRoute";
+import RerservationDetails from "./features/Reservations/ReservationDetails";
 import RoomDetails from "./features/Rooms/RoomDetails";
 import MainLayout from "./layouts/MainLayout";
 import Dashboard from "./pages/Dashboard";
@@ -35,7 +36,11 @@ function App() {
               <Route index element={<Navigate replace to={"dashboard"} />} />
               <Route path="dashboard" element={<Dashboard />} />
               <Route path="reservations" element={<Reservations />} />
-              <Route path=":roomId" element={<RoomDetails />} />
+              <Route path="rooms/:roomId" element={<RoomDetails />} />
+              <Route
+                path="reservations/:reservedId"
+                element={<RerservationDetails />}
+              />
             </Route>
             <Route path="login" element={<Login />} />,
             <Route path="signup" element={<Signup />} />

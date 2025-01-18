@@ -3,8 +3,8 @@ import { ICheckinData } from "../interface/IRoom";
 import supabase from "../services/supabsase";
 
 interface Range {
-  from: string | undefined;
-  to: string | undefined;
+  from: Date | undefined;
+  to: Date | undefined;
 }
 
 interface RoomsState {
@@ -64,17 +64,9 @@ const roomSlice = createSlice({
     }
   },
   extraReducers: (builder) => {
-    builder
-      .addCase(createBooking.pending, (state) => {
-        state.bookingStatus = "loading";
-      })
-      .addCase(createBooking.fulfilled, (state) => {
-        state.bookingStatus = "success";
-      })
-      .addCase(createBooking.rejected, (state, action) => {
-        state.bookingStatus = "failed";
-        state.errorMessage = action.payload as string;
-      });
+    builder.addCase(createBooking.fulfilled, (state) => {
+      state.isCheckInModal = false;
+    });
   }
 });
 
