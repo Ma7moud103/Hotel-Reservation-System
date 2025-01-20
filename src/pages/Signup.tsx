@@ -79,7 +79,6 @@ const Signup = () => {
           </Form>
         )}
       </Formik>
-      ;
     </section>
   );
 };
