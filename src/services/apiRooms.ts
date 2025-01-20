@@ -1,4 +1,4 @@
-import { IBooking, IGetRoomsProps, IRooms } from "../interface/IRoom";
+import { IGetRoomsProps, IRooms } from "../interface/IRoom";
 import { PAGE_SIZE, token } from "../utils/Vars";
 import supabase from "./supabsase";
 

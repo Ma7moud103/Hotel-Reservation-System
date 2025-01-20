@@ -9,7 +9,6 @@ import { ISignUpValues } from "../interface/Iuser";
 import { signup } from "../redux/AuthSlice";
 import { AppDispatch, RootState } from "../store";
 import { passwordRegex, phoneRegex } from "../utils/Vars";
-import AuthLayout from "../layouts/AuthLayout";
 
 const Signup = () => {
   const dispatch = useDispatch<AppDispatch>();
