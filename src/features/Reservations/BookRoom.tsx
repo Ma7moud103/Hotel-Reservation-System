@@ -1,69 +1,60 @@
+import { Form, Formik } from "formik";
 import { MutableRefObject } from "react";
 import { RiCloseCircleFill } from "react-icons/ri";
-import UseOutSideEffect from "../../hooks/UseOutSideEffect";
-import { UseRoom } from "../Rooms/UseRoom";
-import { differenceInDays } from "date-fns";
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../../store";
-import { Formik, Form } from "formik";
-import { ICheckinData } from "../../interface/IRoom";
 import Button from "../../components/Button";
+import UseOutSideEffect from "../../hooks/UseOutSideEffect";
+import { ICheckinData } from "../../interface/IRoom";
 import {
   createBooking,
   handleRange,
   toggleBreakfast
 } from "../../redux/RoomsSlice";
-import Input from "../../components/Input";
+import { AppDispatch, RootState } from "../../store";
+import { UseRoom } from "../Rooms/UseRoom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { guestId } from "../../utils/Vars";
 
 interface IProps {
   handleClose: () => void;
+  totalPrice: number;
+  numberOfNights: number;
 }
-const BookRoom = ({ handleClose }: IProps) => {
+const BookRoom = ({ handleClose, totalPrice, numberOfNights }: IProps) => {
+  const guestId = sessionStorage.getItem("guestId");
+  const navigate = useNavigate();
+  const { roomId } = useParams();
   const dispatch = useDispatch<AppDispatch>();
   const ref: MutableRefObject<HTMLDivElement | null> =
     UseOutSideEffect(handleClose);
 
-  const { range, breakfast, isPaid } = useSelector(
-    (state: RootState) => state.rooms
-  );
+  const { range, breakfast } = useSelector((state: RootState) => state.rooms);
 
   const { room } = UseRoom();
 
   if (!room) return null;
-  const {
-    totalPrice,
-    numGuests,
-    numNights,
-    rooms: { discount, id, regularPrice }
-  } = room;
 
-  const startDate = range.from ? range.from : new Date();
-  const endDate = range.to ? range.to : new Date();
-
-  const nights = differenceInDays(endDate, startDate);
-  const cabinPrice = numNights * (totalPrice - discount);
+  const startDate = range.from
+    ? new Date(range.from.getTime() + 24 * 60 * 60 * 1000)
+    : undefined;
+  const endDate = range.to
+    ? new Date(range.to.getTime() + 24 * 60 * 60 * 1000)
+    : undefined;
 
   const initialValues: ICheckinData = {
-    extrasPrice: 0,
-    guestID: String(guestId),
-    hasBreakfast: breakfast,
-    isPaid: isPaid,
-    numGuests: numGuests,
-    observations: "",
-    status: "checked-in",
-    totalPrice: cabinPrice,
-    cabinId: id,
-    regularPrice: regularPrice,
-    numNights: nights,
+    startDate: startDate,
     endDate: endDate,
-    startDate: startDate
+    isBreakfast: breakfast,
+    totalPrice: totalPrice,
+    roomId: Number(roomId),
+    userId: String(guestId)
   };
 
-  const handleSubmit = async (values: ICheckinData) => {
+  const handleSubmit = async (values: ICheckinData, resetForm: () => void) => {
     try {
       await dispatch(createBooking(values)).unwrap();
+      navigate("/reservations");
+      resetForm();
       toast.success("Booking successfully created!");
     } catch (error) {
       toast.error(error as string);
@@ -72,11 +63,11 @@ const BookRoom = ({ handleClose }: IProps) => {
   return (
     <Formik
       initialValues={initialValues}
-      onSubmit={(values, { setSubmitting }) => {
-        handleSubmit(values).finally(() => setSubmitting(false));
+      onSubmit={(values, { setSubmitting, resetForm }) => {
+        handleSubmit(values, resetForm).finally(() => setSubmitting(false));
       }}
     >
-      {({ values, handleChange, handleBlur, isSubmitting }) => (
+      {({ isSubmitting }) => (
         <div
           ref={ref}
           className="bg-mainBg px-2 sm:px-4 relative shadow-md w-[90%] sm:w-[30rem] md:w-[35rem] py-6 rounded-xl"
@@ -89,30 +80,19 @@ const BookRoom = ({ handleClose }: IProps) => {
             >
               <RiCloseCircleFill className="text-red-600 text-[1.8rem] transition-colors" />
             </button>
-            <header className="text-center mt-4 text-[1.3rem] text-bodyText">
-              Booking Room
+            <header>
+              <h1 className="text-center mt-4 text-[1.3rem] text-bodyText">
+                Booking Room
+              </h1>
+              <p className="text-center mt-1 text-[1rem] text-bodyText capitalize">
+                You will Book this Room for {numberOfNights} nights
+              </p>
             </header>
 
-            <div className="my-4 space-y-3">
-              <div className="w-full flex flex-col gap-y-3 sm:flex-row sm:items-center sm:gap-x-3">
-                <Input name="numNights" label="Num Nights" type="number" />
-                <Input name="numGuests" label="Num Guests" type="number" />
-              </div>
-              <div className="space-y-2">
-                <label>Observations</label>
-                <textarea
-                  className="w-full px-2 shadow-sm rounded-xl bg-white outline-accentGold py-2"
-                  name="observations"
-                  value={values.observations ?? ""}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                />
-              </div>
-            </div>
             <div className="flex items-center gap-x-2 sm:w-full">
               <Button
                 disabled={isSubmitting}
-                className=" text-white py-2 px-4 rounded mt-4 sm:w-1/2"
+                className="px-4 py-2 mt-4 text-white rounded sm:w-1/2"
               >
                 Submit
               </Button>
@@ -123,7 +103,7 @@ const BookRoom = ({ handleClose }: IProps) => {
                   dispatch(toggleBreakfast("reset"));
                 }}
                 type="reset"
-                className=" text-white sm:w-1/2 bg-gray-300 mt-4"
+                className="mt-4 text-white bg-gray-300 sm:w-1/2"
               >
                 Cancel
               </Button>

@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ICheckinData } from "../interface/IRoom";
 import supabase from "../services/supabsase";
+import { differenceInDays } from "date-fns";
 
 interface Range {
   from: Date | undefined;
@@ -12,29 +13,48 @@ interface RoomsState {
   breakfast: boolean;
   isPaid: boolean;
   range: Range;
-  bookingStatus: "loading" | "success" | "failed";
-  errorMessage: string;
+  totalPricePerAllNight: number | null;
+  isLoading: boolean;
 }
 
 const initialState: RoomsState = {
   isCheckInModal: false,
+  isLoading: false,
   breakfast: false,
   isPaid: false,
   range: { from: undefined, to: undefined },
-  bookingStatus: "loading",
-  errorMessage: ""
+  totalPricePerAllNight: null
 };
 
 export const createBooking = createAsyncThunk(
   "rooms/createBooking",
   async (bookingData: ICheckinData, { rejectWithValue }) => {
+    const token = sessionStorage.getItem("token");
+    if (token === null) throw new Error("you are not authorized please login");
     const { error } = await supabase
-      .from("bookings")
+      .from("reservations")
       .insert([bookingData])
       .single();
     if (error) {
       console.log(error);
       return rejectWithValue("Booking could not be created");
+    }
+
+    const { roomId } = bookingData;
+    const { error: updateError } = await supabase
+      .from("hotelRooms")
+      .update({
+        isReserved: true
+        // availableFrom: startDate,
+        // availableTo: endDate
+      })
+      .eq("id", roomId);
+
+    if (updateError) {
+      console.log(updateError);
+      return rejectWithValue(
+        "Booking created, but room status could not be updated"
+      );
     }
   }
 );
@@ -61,14 +81,36 @@ const roomSlice = createSlice({
     },
     handleRange: (state, action: PayloadAction<Range>) => {
       state.range = action.payload;
+    },
+    handleTotalPrice: (state, action: PayloadAction<number>) => {
+      const selectedStartDate = state.range.from;
+      const selectedEndDate = state.range.to;
+      const numberOfNight = differenceInDays(
+        String(selectedEndDate),
+        String(selectedStartDate)
+      );
+
+      state.totalPricePerAllNight = numberOfNight * action.payload;
     }
   },
   extraReducers: (builder) => {
-    builder.addCase(createBooking.fulfilled, (state) => {
-      state.isCheckInModal = false;
-    });
+    builder
+      .addCase(createBooking.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(createBooking.rejected, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(createBooking.fulfilled, (state) => {
+        state.isCheckInModal = false;
+        state.isLoading = false;
+        state.breakfast = false;
+        state.range.to = undefined;
+        state.range.from = undefined;
+      });
   }
 });
 
-export const { CheckInModal, toggleBreakfast, handleRange } = roomSlice.actions;
+export const { CheckInModal, toggleBreakfast, handleRange, handleTotalPrice } =
+  roomSlice.actions;
 export default roomSlice.reducer;

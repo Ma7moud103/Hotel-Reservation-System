@@ -7,6 +7,7 @@ import { RiLoginBoxFill, RiLogoutBoxRFill } from "react-icons/ri";
 interface Route {
   name: string;
   href: string;
+  isAuthorized: boolean;
   icon: IconType;
 }
 
@@ -25,22 +26,26 @@ export const routes: Route[] = [
   {
     name: "Dashboard",
     href: "/dashboard",
-    icon: IoMdHome
+    icon: IoMdHome,
+    isAuthorized: true
   },
   {
     name: "Reservations",
     href: "/reservations",
-    icon: FaIdCard
+    icon: FaIdCard,
+    isAuthorized: token !== null ? true : false
   },
   {
     name: "Login",
     href: "/login",
-    icon: RiLoginBoxFill
+    icon: RiLoginBoxFill,
+    isAuthorized: token !== null ? false : true
   },
   {
     name: "Signup",
     href: "/signup",
-    icon: RiLogoutBoxRFill
+    icon: RiLogoutBoxRFill,
+    isAuthorized: token !== null ? false : true
   }
 ];
 

@@ -46,35 +46,6 @@ export const login = createAsyncThunk<
       sessionStorage.setItem("userName", userName);
       sessionStorage.setItem("guestId", data.session.user.id);
     }
-
-    const { error: guestError } = await supabase
-      .from("guests")
-      .upsert({
-        id: Number(new Date().getMilliseconds()),
-        guestId: String(data.session.user.id),
-        email: data.user?.email,
-        fullName: handleUserName(String(data.session.user.email))
-      })
-      .single();
-
-    if (guestError) {
-      toast.error("Error adding user to guests table");
-      console.log(guestError);
-      throw new Error(guestError.message);
-    }
-  }
-
-  if (data?.user && !data.user.email_confirmed_at) {
-    const { error: verificationError } = await supabase.auth.updateUser({
-      email: data.user.email
-    });
-
-    if (verificationError) {
-      console.log(verificationError);
-      throw new Error(verificationError.message);
-    }
-
-    toast.info("A verification email has been sent. Please check your inbox.");
   }
 
   return { user: data.user, session: data.session };

@@ -1,5 +1,4 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
 import Button from "../../components/Button";
 import Cancelation from "../../components/Cancelation";
 import Loading from "../../components/Loading";
@@ -11,7 +10,6 @@ import { AppDispatch, RootState } from "../../store";
 import { UseBooking } from "./UseBooking";
 
 function ReservationDetails() {
-  const { roomId } = useParams<{ roomId: string }>();
   const moveBack = useMoveBack();
   const { isCheckInModal } = useSelector((state: RootState) => state.rooms);
   const dispatch = useDispatch<AppDispatch>();
@@ -23,25 +21,24 @@ function ReservationDetails() {
   const { room, isLoading, error } = UseBooking();
 
   if (!room) return null;
+  const {
+    hotelRooms: { isReserved, id, name }
+  } = room;
   if (isLoading) return <Loading />;
   if (error) return <div>Error loading room details: {error.message}</div>;
-  const { status } = room;
-  const statusToTagName =
-    status === "unconfirmed"
-      ? "bg-gray-100 text-gray-700"
-      : status === "checked-in"
-      ? "bg-green-100 text-green-700"
-      : status === "checked-out" && "bg-blue-100 text-blue-700";
+  const statusToTagName = isReserved
+    ? "bg-green-200 text-green-700"
+    : "bg-gray-300 text-gray-700 ";
 
   return (
     <div className="sm:p-6   bg-cardBg sm:border-borderLightGray  rounded-xl">
       <header className="flex justify-between w-full items-center mb-6">
         <div className="flex items-center w-full justify-between sm:justify-normal gap-6 ">
-          <h1 className="text-3xl font-semibold">Room #{roomId}</h1>
+          <h1 className="text-3xl font-semibold">Room {name}</h1>
           <span
             className={`uppercase text-xs font-semibold px-3 py-1 rounded-full ${statusToTagName}`}
           >
-            {status.replace("-", " ")}
+            {isReserved ? "Reserved" : "Available"}
           </span>
         </div>
 
@@ -71,7 +68,7 @@ function ReservationDetails() {
         </Button>
         {isCheckInModal && (
           <Modal>
-            <Cancelation handleClose={handleClose} />
+            <Cancelation roomId={id} handleClose={handleClose} />
           </Modal>
         )}
       </div>

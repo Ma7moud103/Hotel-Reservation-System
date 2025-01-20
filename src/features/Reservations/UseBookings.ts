@@ -1,15 +1,15 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
-import { IRooms } from "../../interface/IRoom";
+import { IBooking } from "../../interface/IRoom";
 import { getBookings } from "../../services/apiBookings";
 import { PAGE_SIZE } from "../../utils/Vars";
-import { guestId } from "./../../utils/Vars";
 
 interface IProps {
-  data: IRooms[];
+  data: IBooking[];
   count: number;
 }
 export function UseBookings() {
+  const guestId = sessionStorage.getItem("guestId");
   const [searchParams] = useSearchParams();
   const QueryClient = useQueryClient();
 

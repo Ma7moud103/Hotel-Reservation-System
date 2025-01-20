@@ -1,30 +1,29 @@
-import { format, isToday } from "date-fns";
+import { differenceInDays, format } from "date-fns";
 import "react-day-picker/dist/style.css";
 import { FaCalendarWeek } from "react-icons/fa6";
 import { HiOutlineCheckCircle } from "react-icons/hi2";
 
-import { RiMoneyEuroCircleLine } from "react-icons/ri";
+import { FaHotel } from "react-icons/fa";
 import { IBooking } from "../interface/IRoom";
-import { formatDistanceFromNow } from "../utils/Vars";
-import RoomFooter from "./RoomFooter";
-import RoomHeader from "./RoomHeader";
+import { formatCurrency } from "../utils/Vars";
 
 interface IProps {
   room: IBooking;
 }
 function ReservationBoxData({ room }: IProps) {
   if (!room) return null;
+
   const {
-    rooms: { maxCapacity, name, image, regularPrice },
+    id,
     startDate,
     endDate,
-    extrasPrice,
-
-    hasBreakfast,
-    isPaid,
-    observations
+    totalPrice,
+    isBreakfast,
+    hotelRooms: { image, description, breakfastPrice }
   } = room;
 
+  const totalBreakfastPrice =
+    differenceInDays(endDate, startDate) * breakfastPrice;
   return (
     <>
       <section className=" grid grid-cols-1 lg:grid-cols-2 lg:gap-x-5   ">
@@ -33,23 +32,20 @@ function ReservationBoxData({ room }: IProps) {
             <img
               className="w-full rounded-md rounded-b-none  md:rounded-md "
               src={image}
-              alt={name}
+              alt={`image ${id}`}
             />
           </div>
         </section>
         <section>
-          <RoomHeader maxCapacity={maxCapacity} name={name} />
+          {/* <RoomHeader maxCapacity={maxCapacity} name={name} /> */}
           <div className="px-2 sm:px-4">
             <div className=" space-y-8 py-4 ">
               <div className=" date flex items-center gap-x-2 font-semibold  text-xs sm:text-[1.1rem]   capitalize text-orange-700">
                 <span className="">
                   <FaCalendarWeek />
                 </span>
-                {format(new Date(startDate), "EEE, MMM dd yyyy")} (
-                {isToday(new Date(startDate))
-                  ? "Today"
-                  : formatDistanceFromNow(startDate)}
-                ) &mdash; {format(new Date(endDate), "EEE, MMM dd yyyy")}
+                {format(new Date(startDate), "EEE, MMM dd yyyy")}&mdash;
+                {format(new Date(endDate), "EEE, MMM dd yyyy")}
               </div>
 
               <div className=" flex gap-y-3 flex-col sm:flex-row sm:justify-between sm:items-center">
@@ -59,28 +55,30 @@ function ReservationBoxData({ room }: IProps) {
                     className="text-primaryBlue"
                   />
                   <span className="font-medium">
-                    Breakfast Included? {hasBreakfast ? " Yes" : " No"}
+                    Breakfast Included? {isBreakfast ? " Yes" : " No"}
                   </span>
                 </div>
                 <div className="icon flex items-center gap-x-2">
-                  <RiMoneyEuroCircleLine
-                    size={22}
-                    className="text-primaryBlue"
-                  />
+                  <FaHotel className="text-primaryBlue text-[1rem]" />
                   <span className="font-medium">
-                    Booking is paid? {isPaid ? " Yes" : " No"}
+                    {differenceInDays(endDate, startDate)} nights
                   </span>
                 </div>
               </div>
-              {!observations && (
-                <p className="text-bodyText ps-3 ">{observations}</p>
+              {description && (
+                <p className="text-bodyText ps-3 ">{description}</p>
               )}
+
+              <div className="flex flex-col gap-y-1 sm:flex-row sm:justify-between sm:items-center">
+                <p className="text-borderAccentGold font-medium">
+                  TotalPrice : {formatCurrency(totalPrice)}
+                </p>
+                <p className="text-borderAccentGold font-medium">
+                  Breakfast Price For All Nights :{" "}
+                  {formatCurrency(totalBreakfastPrice)}
+                </p>
+              </div>
             </div>
-            <RoomFooter
-              extrasPrice={extrasPrice}
-              hasBreakfast={hasBreakfast}
-              regularPrice={regularPrice}
-            />
           </div>
         </section>
       </section>

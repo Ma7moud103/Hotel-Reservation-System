@@ -19,27 +19,27 @@ const RoomsOperation = () => {
         />
         <SortBy
           options={[
-            { value: "regularPrice-asc", label: "regularPrice from low" },
-            { value: "regularPrice-desc", label: "regularPrice from heigh" }
+            { value: "price-asc", label: "From Lowest Price" },
+            { value: "price-desc", label: "From Highest Price" }
           ]}
         />
         <SortBy
           options={[
             {
-              value: "regularPrice-50To100",
-              label: "regularPrice from 50 to 100"
+              value: "price-50To100",
+              label: "price from 50 to 100"
             },
             {
-              value: "regularPrice-100To200",
-              label: "regularPrice from 100 to 200"
+              value: "price-100To400",
+              label: "price from 100 to 400"
             },
             {
-              value: "regularPrice-200To400",
-              label: "regularPrice from 200 to 400"
+              value: "price-400To800",
+              label: "price from 400 to 800"
             },
             {
-              value: "regularPrice-400To1000",
-              label: "regularPrice from 400 to 1000"
+              value: "price-Up800",
+              label: "price up 800"
             }
           ]}
         />

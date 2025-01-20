@@ -8,7 +8,7 @@ interface GetRoomsResponse {
   data: IRooms[];
   count: number;
 }
-export function UseRooms() {
+export function UseRooms(isCheckingIn: boolean | null) {
   const [searchParams] = useSearchParams();
   const QueryClient = useQueryClient();
 
@@ -22,7 +22,7 @@ export function UseRooms() {
       : { filterBy: "type", value: filterValue };
 
   //sort
-  const sortByRaw = searchParams.get("sortBy") || "regularPrice-ase";
+  const sortByRaw = searchParams.get("sortBy") || "price-ase";
   const [field, direction] = sortByRaw.split("-");
   const sortBy = { field, direction };
 
@@ -32,7 +32,7 @@ export function UseRooms() {
     error,
     isLoading
   } = useQuery<GetRoomsResponse>({
-    queryKey: ["rooms", page, filter, sortBy],
+    queryKey: ["rooms", page, filter, sortBy, isCheckingIn],
     queryFn: () => getRooms({ page, filter, sortBy })
   });
 
@@ -41,14 +41,14 @@ export function UseRooms() {
     const pageCount = Math.ceil(rooms?.count / PAGE_SIZE);
     if (page < pageCount) {
       QueryClient.prefetchQuery({
-        queryKey: ["rooms", page + 1, filter, sortBy],
+        queryKey: ["rooms", page + 1, filter, sortBy, isCheckingIn],
         queryFn: () => getRooms({ page: page + 1, filter, sortBy })
       });
     }
 
     if (page > 1)
       QueryClient.prefetchQuery({
-        queryKey: ["rooms", page - 1, filter, sortBy],
+        queryKey: ["rooms", page - 1, filter, sortBy, isCheckingIn],
         queryFn: () => getRooms({ page: page - 1, filter, sortBy })
       });
   }

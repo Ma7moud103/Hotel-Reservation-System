@@ -1,3 +1,4 @@
+import { useSelector } from "react-redux";
 import Empty from "../../components/Empty";
 import Loading from "../../components/Loading";
 import Pagination from "../../components/Pagination";
@@ -5,12 +6,14 @@ import Pagination from "../../components/Pagination";
 import { IRooms } from "../../interface/IRoom";
 import Room from "./Room";
 import { UseRooms } from "./UseRooms";
+import { RootState } from "../../store";
 
 const Rooms = () => {
-  const { rooms, isLoading } = UseRooms();
+  const isCheckingIn = useSelector((state: RootState) => state.rooms.isLoading);
+
+  const { rooms, isLoading } = UseRooms(isCheckingIn);
 
   const data = rooms?.data;
-  console.log(data);
   const count = rooms?.count ?? 0;
 
   if (isLoading) return <Loading />;

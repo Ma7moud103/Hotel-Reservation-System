@@ -8,63 +8,44 @@ export interface Guest {
   nationality: string;
 }
 
-export interface Room {
-  created_at: string;
-  description: string;
-  discount: number;
-  id: number;
-  image: string;
-  maxCapacity: number;
-  name: string;
-  regularPrice: number;
-  status: string;
-  type: string;
-}
+// export interface Room {
+//   created_at: string;
+//   description: string;
+//   discount: number;
+//   id: number;
+//   image: string;
+//   maxCapacity: number;
+//   name: string;
+//   regularPrice: number;
+//   status: string;
+//   type: string;
+// }
 
 export interface IRooms {
-  maxCapacity: number;
-  cabinId: number;
-  created_at: string;
-  endDate: string;
-  extrasPrice: number;
-  guestId: number;
-  guests: Guest;
-  hasBreakfast: boolean;
+  name: string;
+  availableFrom: Date;
+  availableTo: Date;
+  breakfastPrice: number;
+  created_at: Date;
+  description: string;
   id: number;
-  isBreakfast: boolean;
-  isPaid: boolean;
-  numGuests: number;
-  numNights: number;
-  observations: string;
-  regularPrice: number;
-  rooms: Room;
-  startDate: string;
-  status: string;
-  totalPrice: number;
-  type: string;
+  image: string;
+  isReserved: boolean;
+  price: number;
+  type: "single" | "double" | "suite";
 }
 
 export interface IBooking {
-  cabinId: number;
   created_at: string;
   endDate: string;
-  extrasPrice: number;
-  guestId: number;
-  guests: Guest;
-  hasBreakfast: boolean;
   id: number;
-  isBreakfase: boolean;
-  isPaid: boolean;
-  maxCapacity: number;
-  numGuests: number;
-  numNights: number;
-  observations: string;
-  regularPrice: number;
-  rooms: Room;
+  isBreakfast: boolean;
+  roomId: number;
   startDate: string;
-  status: string;
   totalPrice: number;
-  type: string;
+  userId: string;
+
+  hotelRooms: IRooms;
 }
 export interface IOption {
   label: string;
@@ -82,17 +63,10 @@ export interface IGetRoomsProps {
 }
 
 export interface ICheckinData {
-  guestID: string;
-  numGuests: number;
-  observations: string | null;
-  extrasPrice: number;
+  roomId: number;
+  startDate: Date | undefined | string;
+  endDate: Date | undefined | string;
+  userId: string;
+  isBreakfast: boolean;
   totalPrice: number;
-  isPaid: boolean;
-  hasBreakfast: boolean;
-  status: "checked-in" | "checked-out" | "unconfirmed";
-  startDate: Date | undefined;
-  endDate: Date | undefined;
-  numNights: number;
-  regularPrice: number;
-  cabinId: number;
 }

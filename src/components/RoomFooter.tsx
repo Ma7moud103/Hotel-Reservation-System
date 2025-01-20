@@ -1,32 +1,30 @@
 import { HiOutlineCurrencyDollar } from "react-icons/hi2";
 import { formatCurrency } from "../utils/Vars";
-import { useSelector } from "react-redux";
-import { RootState } from "../store";
 
 const RoomFooter = ({
-  extrasPrice,
+  price,
   hasBreakfast,
-  regularPrice
+  breakfastPrice,
+  totalPrice
 }: {
-  regularPrice: number;
-  hasBreakfast: Boolean;
-  extrasPrice: number;
+  price: number;
+  breakfastPrice: number;
+  hasBreakfast: boolean;
+  totalPrice: number;
 }) => {
-  const { isPaid } = useSelector((state: RootState) => state.rooms);
-
   return (
     <div className="w-full flex bg-primaryBlue  items-center justify-between   text-white p-3 sm:p-5 rounded-lg">
       <div className="flex items-center gap-x-2 text-sm sm:text-base">
         <HiOutlineCurrencyDollar size={22} />
         Total Price
-        {formatCurrency(regularPrice)}
+        {formatCurrency(totalPrice)}
         {hasBreakfast &&
-          ` (${formatCurrency(regularPrice)} Room + ${formatCurrency(
-            extrasPrice
-          )} breakfast)`}
+          ` (${formatCurrency(price)} Room + ${formatCurrency(
+            breakfastPrice
+          )} breakfast )`}
       </div>
 
-      <p className="">{isPaid ? "Paid" : "Not Paid"}</p>
+      {/* <p className="">{isPaid ? "Paid" : "Not Paid"}</p> */}
     </div>
   );
 };

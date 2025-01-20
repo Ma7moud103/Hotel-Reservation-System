@@ -1,49 +1,37 @@
-import { NavLink, useNavigate } from "react-router-dom";
-import { routes } from "../utils/Vars";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../store";
+import { FaIdCard, FaRegUser } from "react-icons/fa";
+import { IoMdHome } from "react-icons/io";
+import { RiLoginBoxFill } from "react-icons/ri";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { logout } from "../redux/AuthSlice";
+import { AppDispatch } from "../store";
+import Route from "./Route";
 
 const LargeRoutes = () => {
-  const { isAuthorized } = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
+  const token = sessionStorage.getItem("token");
   return (
     <>
-      <ul className="items-center hidden md:flex gap-x-5 md:self-center">
-        {routes.slice(0, 2).map((route) => (
-          <li key={route.href} className="text-[1.1rem] font-semibold">
-            <NavLink
-              className={({ isActive }) =>
-                isActive
-                  ? "flex items-center gap-x-2 shadow-md px-3 py-2 rounded-xl bg-borderLightGray font-bold"
-                  : "flex items-center gap-x-2"
-              }
-              to={route.href}
-            >
-              <route.icon size={22} />
-              <span>{route.name}</span>
-            </NavLink>
-          </li>
-        ))}
+      <ul className="items-center hidden md:flex gap-x-5 md:self-center ">
+        <Route name="Dashboard" href="/dashboard">
+          <IoMdHome size={22} />
+        </Route>
+        {token !== null && (
+          <Route name="Reservations" href="/reservations">
+            <FaIdCard size={22} />
+          </Route>
+        )}
       </ul>
-      {!isAuthorized ? (
-        <ul className="items-center hidden md:flex gap-x-5 md:self-center">
-          {routes.slice(2, 4).map((route) => (
-            <li key={route.href} className="text-[1.1rem] font-semibold">
-              <NavLink
-                className={({ isActive }) =>
-                  isActive
-                    ? "flex items-center gap-x-2 shadow-md px-3 py-2 rounded-xl bg-borderLightGray font-bold"
-                    : "flex items-center gap-x-2"
-                }
-                to={route.href}
-              >
-                <route.icon size={22} />
-                <span>{route.name}</span>
-              </NavLink>
-            </li>
-          ))}
+
+      {token === null ? (
+        <ul className="items-center hidden md:flex gap-x-5 md:self-center ">
+          <Route name="Login" href="/login">
+            <RiLoginBoxFill size={22} />
+          </Route>
+          <Route name="SignUP" href="/signup">
+            <FaRegUser size={22} />
+          </Route>
         </ul>
       ) : (
         <ul className="items-center hidden md:flex gap-x-5 md:self-center">

@@ -12,11 +12,13 @@ export async function getRooms({
   filter,
   sortBy
 }: IGetRoomsProps): Promise<GetRoomsResponse> {
-  let query = supabase.from("bookings").select("*, rooms(*), guests(*)", {
+  let query = supabase.from("hotelRooms").select("*", {
     count: "exact"
   });
 
   if (token === null) null;
+
+  query = query.eq("isReserved", false);
 
   //filter
   if (filter) query = query["eq"](filter.filterBy, filter.value);
@@ -24,14 +26,15 @@ export async function getRooms({
   //sort
   if (sortBy) {
     const { field, direction } = sortBy;
+    const [min, max] = direction.split("To").map(Number);
 
     if (direction.includes("To")) {
-      const [min, max] = direction.split("To").map(Number);
-
       query = query
         .gte(field, min)
         .lte(field, max)
         .order(field, { ascending: true });
+    } else if (direction.includes("Up")) {
+      query = query.gte(field, 800).order(field, { ascending: true });
     } else {
       query = query.order(field, {
         ascending: direction === "asc"
@@ -57,8 +60,8 @@ export async function getRoom(id: number) {
   if (token === null) null;
 
   const { data, error } = await supabase
-    .from("bookings")
-    .select("*, rooms(*), guests(email)")
+    .from("hotelRooms")
+    .select("*")
     .eq("id", id)
     .single();
 
@@ -67,5 +70,5 @@ export async function getRoom(id: number) {
     throw new Error("Room is not found");
   }
 
-  return data as IBooking;
+  return data as IRooms;
 }

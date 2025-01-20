@@ -9,8 +9,9 @@ import { toast } from "react-toastify";
 
 interface IProps {
   handleClose: () => void;
+  roomId: number;
 }
-const Cancelation = ({ handleClose }: IProps) => {
+const Cancelation = ({ handleClose, roomId }: IProps) => {
   const ref: MutableRefObject<HTMLDivElement | null> =
     UseOutSideEffect(handleClose);
   const { reservedId } = useParams();
@@ -18,7 +19,7 @@ const Cancelation = ({ handleClose }: IProps) => {
 
   const queryClient = useQueryClient();
   const { mutate, isPending: isCheckingout } = useMutation({
-    mutationFn: () => deleteBooking(Number(reservedId)),
+    mutationFn: () => deleteBooking(Number(reservedId), Number(roomId)),
     onSuccess: () => {
       toast.success("you cancel your reservations successfully");
       queryClient.invalidateQueries({ queryKey: ["bookings"] });
